@@ -9,10 +9,14 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.XboxController.Button;
 import frc.robot.Constants.OIConstants;
+import frc.robot.subsystems.ColorPanelRotator;
 import frc.robot.subsystems.DriveSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -24,6 +28,7 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 public class RobotContainer {
 
   private final DriveSubsystem driveSubsystem = new DriveSubsystem();
+  private final ColorPanelRotator colorPanelRotator = new ColorPanelRotator();
 
   XboxController xboxController = new XboxController(OIConstants.XBOX_CONTROLLER);
 
@@ -45,6 +50,9 @@ public class RobotContainer {
    * passing it to a {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
+    new JoystickButton(xboxController, Button.kB.value)
+        .whenPressed(new InstantCommand(colorPanelRotator::rotate, colorPanelRotator))
+        .whenReleased(new InstantCommand(colorPanelRotator::stop, colorPanelRotator));
   }
 
   /**
