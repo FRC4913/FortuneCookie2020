@@ -11,6 +11,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
 
@@ -24,13 +25,26 @@ public class DriveSubsystem extends SubsystemBase {
 
   private final DifferentialDrive drive = new DifferentialDrive(leftControllerGroup, rightControllerGroup);
 
+  private boolean isArcade = true;
+
   public DriveSubsystem() {
 
   }
-
-  public void arcadeDrive(double xSpeed, double zRotation) {
-    drive.arcadeDrive(xSpeed, zRotation);
+  public void driveMode(double x, double y) {
+    if(isArcade){
+      drive.arcadeDrive(x, y);
+    }
+    else{
+      drive.tankDrive(x, y);
+    }
   }
+
+  public void convert(){
+    isArcade=!isArcade;
+    SmartDashboard.updateValues();
+    SmartDashboard.putBoolean("mode", isArcade);
+  }
+
 
   @Override
   public void periodic() {
