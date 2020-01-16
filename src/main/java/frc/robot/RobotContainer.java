@@ -51,7 +51,9 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     new JoystickButton(xboxController, Button.kB.value)
-        .whileHeld(new InstantCommand(colorPanelRotator::rotate, colorPanelRotator));
+        .whileHeld(new InstantCommand(colorPanelRotator::rotate, colorPanelRotator))
+        .whenReleased(new InstantCommand(colorPanelRotator::stop, colorPanelRotator));
+
   }
 
   /**

@@ -15,17 +15,51 @@ import edu.wpi.first.wpilibj.util.Color;
 public class ColorPanelRotator extends SubsystemBase {
   private final ColorSensorV3 colorSensor = new ColorSensorV3(Constants.I2C_PORT);
   private final Spark colorPanelSpark = new Spark(Constants.COLOR_PANEL_ROTATOR_MOTOR_ID);
+  private int numOfRots=0;
+  private String startingColor;
 
   public ColorPanelRotator() {
   }
 
-  public void rotate() {
-    String gameData;
-    gameData = DriverStation.getInstance().getGameSpecificMessage();
-    if (gameData.length() > 0) {
-      colorPanelSpark.setSpeed(0.5);
+  public void rotateToGameColor(){
+    String colorChar = DriverStation.getInstance().getGameSpecificMessage();
+    if (colorChar.length() > 0) {
+    switch (DriverStation.getInstance().getGameSpecificMessage().charAt(0)) {
+      case 'B':
+        rotateToColor("Blue");
+        break;
+      case 'G':
+        // Green case code
+        rotateToColor("Green");
+        break;
+      case 'R':
+        // Red case code
+        rotateToColor("Red");
+        break;
+      case 'Y':
+        // Yellow case code
+        rotateToColor("Yellow");
+        break;
+      default:
+        // This is corrupt data
+        break;
+      }}
+  }
 
-      ColorMatch colorMatcher = new ColorMatch();
+  public void rotateToColor(String targetColor) {
+      colorPanelSpark.setSpeed(0.5);
+      String colorString=getColor();
+      if(colorString == targetColor){
+        colorPanelSpark.setSpeed(0);
+      }
+      else {
+      // Code for no data received yet
+      colorPanelSpark.setSpeed(0);
+    }
+  }
+
+  public String getColor(){
+    ColorMatch colorMatcher = new ColorMatch();
 
       Color kBlueTarget = ColorMatch.makeColor(0.122, 0.426, 0.451);
       Color kRedTarget = ColorMatch.makeColor(0.523, 0.345, 0.132);
@@ -58,44 +92,14 @@ public class ColorPanelRotator extends SubsystemBase {
       SmartDashboard.putNumber("green", detectedColor.green);
       SmartDashboard.putNumber("blue", detectedColor.blue);
       SmartDashboard.putNumber("confidence", match.confidence);
-
-      switch (gameData.charAt(0)) {
-      case 'B':
-        // Blue case code
-        if (colorString == "Blue") {
-          colorPanelSpark.setSpeed(0);
-        }
-        break;
-      case 'G':
-        // Green case code
-        if (colorString == "Green") {
-          colorPanelSpark.setSpeed(0);
-        }
-        break;
-      case 'R':
-        // Red case code
-        if (colorString == "Red") {
-          colorPanelSpark.setSpeed(0);
-        }
-        break;
-      case 'Y':
-        // Yellow case code
-        if (colorString == "Yellow") {
-          colorPanelSpark.setSpeed(0);
-        }
-        break;
-      default:
-        // This is corrupt data
-        break;
-      }
-    } else {
-      // Code for no data received yet
-      colorPanelSpark.setSpeed(0);
-    }
+      return colorString;
   }
 
   public void rotate(int numRotations) {
-
+    if(getColor().equals("Blue")){
+      rotateToColor("Red");
+    }
+    }
   }
 
   public void stop() {
