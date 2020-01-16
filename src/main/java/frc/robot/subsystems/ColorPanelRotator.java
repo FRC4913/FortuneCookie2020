@@ -97,13 +97,15 @@ public class ColorPanelRotator extends SubsystemBase {
 
   public void rotate(int numRotations) {
     String firstColor = getColor();
-    if(firstColor.equals("Blue")){
-      rotateToColor("Red");
-      rotateToColor("Blue");
-    }
-    else{
-      rotateToColor("Blue");
-      rotateToColor("firstColor");
+    for(int i = 0;i<numRotations;i++){
+      if(firstColor.equals("Blue")){
+        rotateToColor("Red");
+        rotateToColor("Blue");
+      }
+      else{
+        rotateToColor("Blue");
+        rotateToColor("firstColor");
+      }
     }
   }
 
