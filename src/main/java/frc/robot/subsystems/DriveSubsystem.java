@@ -28,23 +28,27 @@ public class DriveSubsystem extends SubsystemBase {
   private boolean isArcade = true;
 
   public DriveSubsystem() {
-
+    SmartDashboard.putString("mode", "arcade");
   }
-  public void driveMode(double x, double y) {
-    if(isArcade){
-      drive.arcadeDrive(x, y);
+
+  public void drive(double leftY, double rightY, double rightX) {
+
+    if (isArcade) {
+      drive.arcadeDrive(-leftY, rightX);
+    } else {
+      drive.tankDrive(-leftY, -rightY);
     }
-    else{
-      drive.tankDrive(x, y);
-    }
   }
 
-  public void convert(){
-    isArcade=!isArcade;
-    SmartDashboard.updateValues();
-    SmartDashboard.putBoolean("mode", isArcade);
+  public void convertToArcade() {
+    isArcade = true;
+    SmartDashboard.putString("mode", "arcade");
   }
 
+  public void convertToTank() {
+    isArcade = false;
+    SmartDashboard.putString("mode", "tank");
+  }
 
   @Override
   public void periodic() {

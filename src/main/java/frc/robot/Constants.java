@@ -21,10 +21,10 @@ import edu.wpi.first.wpilibj.I2C;
  */
 public final class Constants {
     public static final class DriveConstants {
-        public static final int FRONT_LEFT_MOTOR_ID = 6;
-        public static final int FRONT_RIGHT_MOTOR_ID = 7;
-        public static final int REAR_LEFT_MOTOR_ID = 2;
-        public static final int REAR_RIGHT_MOTOR_ID = 4;
+        public static final int FRONT_LEFT_MOTOR_ID = 4;
+        public static final int FRONT_RIGHT_MOTOR_ID = 2;
+        public static final int REAR_LEFT_MOTOR_ID = 7;
+        public static final int REAR_RIGHT_MOTOR_ID = 6;
     }
 
     public static final class OIConstants {
