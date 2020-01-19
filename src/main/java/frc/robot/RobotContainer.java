@@ -39,8 +39,9 @@ public class RobotContainer {
     // Configure the button bindings
     configureButtonBindings();
     driveSubsystem
-        .setDefaultCommand(new RunCommand(() -> driveSubsystem.arcadeDrive(xboxController.getY(GenericHID.Hand.kLeft),
-            xboxController.getX(GenericHID.Hand.kRight)), driveSubsystem));
+        .setDefaultCommand(new RunCommand(() -> driveSubsystem.drive(xboxController.getY(GenericHID.Hand.kLeft),
+                xboxController.getY(GenericHID.Hand.kRight), xboxController.getX(GenericHID.Hand.kRight)),
+            driveSubsystem));
   }
 
   /**
@@ -53,6 +54,8 @@ public class RobotContainer {
     new JoystickButton(xboxController, Button.kB.value)
         .whenPressed(new InstantCommand(colorPanelRotator::rotate, colorPanelRotator))
         .whenReleased(new InstantCommand(colorPanelRotator::stop, colorPanelRotator));
+    new JoystickButton(xboxController, Button.kBack.value).whenPressed(() -> driveSubsystem.convertToTank());
+    new JoystickButton(xboxController, Button.kStart.value).whenPressed(() -> driveSubsystem.convertToArcade());
   }
 
   /**
