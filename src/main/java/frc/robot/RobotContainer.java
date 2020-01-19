@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.XboxController.Button;
 import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.ColorPanelRotator;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.IntakerSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -29,6 +30,7 @@ public class RobotContainer {
 
   private final DriveSubsystem driveSubsystem = new DriveSubsystem();
   private final ColorPanelRotator colorPanelRotator = new ColorPanelRotator();
+  private final IntakerSubsystem intakerSubsystem = new IntakerSubsystem();
 
   XboxController xboxController = new XboxController(OIConstants.XBOX_CONTROLLER);
 
@@ -56,6 +58,10 @@ public class RobotContainer {
         .whenReleased(new InstantCommand(colorPanelRotator::stop, colorPanelRotator));
     new JoystickButton(xboxController, Button.kBack.value).whenPressed(() -> driveSubsystem.convertToTank());
     new JoystickButton(xboxController, Button.kStart.value).whenPressed(() -> driveSubsystem.convertToArcade());
+    new JoystickButton(xboxController, Button.kBumperLeft.value)
+        .whenPressed(new InstantCommand(intakerSubsystem::startIntaker, intakerSubsystem))
+        .whenReleased(new InstantCommand(intakerSubsystem::stopIntaker, intakerSubsystem));
+
   }
 
   /**
