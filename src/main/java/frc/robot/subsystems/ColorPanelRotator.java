@@ -17,6 +17,7 @@ public class ColorPanelRotator extends SubsystemBase {
   private final Spark colorPanelSpark = new Spark(Constants.COLOR_PANEL_ROTATOR_MOTOR_ID);
   private int numOfRots=0;
   private String startingColor;
+  private boolean isFinish = false;
 
   public ColorPanelRotator() {
   }
@@ -43,7 +44,10 @@ public class ColorPanelRotator extends SubsystemBase {
       default:
         // This is corrupt data
         break;
-      }}
+      }
+    } else{
+      colorPanelSpark.setSpeed(0);
+    }
   }
 
   public void rotateToColor(String targetColor) {
@@ -95,22 +99,23 @@ public class ColorPanelRotator extends SubsystemBase {
       return colorString;
   }
 
-  public void rotate(int numRotations) {
-    String firstColor = getColor();
-    for(int i = 0;i<numRotations;i++){
-      if(firstColor.equals("Blue")){
-        rotateToColor("Red");
-        rotateToColor("Blue");
+  public void tester() {
+    for(int i=0;i<5;i++){
+      while("Blue".compareTo(getColor())==0){
+        colorPanelSpark.setSpeed(.5);
       }
-      else{
-        rotateToColor("Blue");
-        rotateToColor("firstColor");
-      }
+      rotateToColor("Blue");
     }
   }
+  
+
 
   public void stop() {
     colorPanelSpark.setSpeed(0);
+  }
+
+  public void startTest(){
+    colorPanelSpark.setSpeed(1);
   }
 
   public void periodic() {

@@ -13,9 +13,14 @@ import edu.wpi.first.wpilibj.XboxController.Button;
 import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.ColorPanelRotator;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.IntakerSubsystem;
+import frc.robot.subsystems.LoaderSubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 /**
@@ -26,9 +31,11 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
  * commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-
   private final DriveSubsystem driveSubsystem = new DriveSubsystem();
   private final ColorPanelRotator colorPanelRotator = new ColorPanelRotator();
+  private final IntakerSubsystem intakeSub = new IntakerSubsystem();
+  private final LoaderSubsystem loadSub = new LoaderSubsystem();
+  private final ShooterSubsystem shootSub = new ShooterSubsystem();
 
   XboxController xboxController = new XboxController(OIConstants.XBOX_CONTROLLER);
 
@@ -51,8 +58,25 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     new JoystickButton(xboxController, Button.kB.value)
-        .whileHeld(new InstantCommand(colorPanelRotator::rotate, colorPanelRotator))
+        .whileHeld(new InstantCommand(colorPanelRotator::rotateToGameColor, colorPanelRotator))
         .whenReleased(new InstantCommand(colorPanelRotator::stop, colorPanelRotator));
+
+    new JoystickButton(xboxController, Button.kA.value)
+        .whileHeld(new InstantCommand(colorPanelRotator::tester, colorPanelRotator))
+        .whenReleased(new InstantCommand(colorPanelRotator::stop, colorPanelRotator));
+
+    new JoystickButton(xboxController, Button.kBumperLeft.value)
+        .whileHeld(new InstantCommand(intakeSub::startIntaker, intakeSub))
+        .whenReleased(new InstantCommand(intakeSub::stopIntaker, intakeSub));
+
+    new JoystickButton(xboxController, Button.kY.value)
+        .whileHeld(new SequentialCommandGroup(
+          new InstantCommand(shootSub::startShooter, shootSub),
+          new WaitCommand(2),
+          new InstantCommand(loadSub::startLoader, loadSub)))
+        .whenReleased(new SequentialCommandGroup(
+          new InstantCommand(shootSub::stopShooter, shootSub),
+          new InstantCommand(loadSub::stopLoader, loadSub)));
 
   }
 
