@@ -62,8 +62,9 @@ public class RobotContainer {
         .whenReleased(new InstantCommand(colorPanelRotator::stop, colorPanelRotator));
 
     new JoystickButton(xboxController, Button.kA.value)
-        .whileHeld(new InstantCommand(colorPanelRotator::tester, colorPanelRotator))
-        .whenReleased(new InstantCommand(colorPanelRotator::stop, colorPanelRotator));
+        .whenPressed(new InstantCommand(colorPanelRotator::numOfRotation, colorPanelRotator));
+        //.whileHeld(new InstantCommand(colorPanelRotator::tester, colorPanelRotator))
+        //.whenReleased(new InstantCommand(colorPanelRotator::stop, colorPanelRotator));
 
     new JoystickButton(xboxController, Button.kBumperLeft.value)
         .whileHeld(new InstantCommand(intakeSub::startIntaker, intakeSub))
@@ -77,6 +78,18 @@ public class RobotContainer {
         .whenReleased(new SequentialCommandGroup(
           new InstantCommand(shootSub::stopShooter, shootSub),
           new InstantCommand(loadSub::stopLoader, loadSub)));
+    
+    
+
+     colorPanelRotator.leftTriggerPressure = xboxController.getTriggerAxis(GenericHID.Hand.kLeft);
+     colorPanelRotator.rightTriggerPressure = xboxController.getTriggerAxis(GenericHID.Hand.kRight);
+     
+     new JoystickButton(xboxController, GenericHID.Hand.kLeft.value)
+      .whileHeld(new InstantCommand(() -> colorPanelRotator.forward(xboxController.getTriggerAxis(GenericHID.Hand.kLeft))));
+
+     // colorPanelRotator
+       // .getCurrentCommand(new InstantCommand(() -> colorPanelRotator.forward(xboxController.getTriggerAxis(GenericHID.Hand.kLeft))))
+        //.getCurrentCommand(new InstantCommand(() -> colorPanelRotator.backward(xboxController.getTriggerAxis(GenericHID.Hand.kRight))));
 
   }
 

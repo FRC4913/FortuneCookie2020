@@ -7,17 +7,23 @@ import com.revrobotics.ColorSensorV3;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.Spark;
+import edu.wpi.first.wpilibj.XboxController;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
+import frc.robot.RobotContainer;
 
 public class ColorPanelRotator extends SubsystemBase {
   private final ColorSensorV3 colorSensor = new ColorSensorV3(Constants.I2C_PORT);
   private final Spark colorPanelSpark = new Spark(Constants.COLOR_PANEL_ROTATOR_MOTOR_ID);
   private int numOfRots=0;
   private String startingColor;
-  private boolean isFinish = false;
+  private boolean isAtStartingColor = true;
+
+  public double leftTriggerPressure;
+  public double rightTriggerPressure;
 
   public ColorPanelRotator() {
   }
@@ -99,12 +105,41 @@ public class ColorPanelRotator extends SubsystemBase {
       return colorString;
   }
 
+  /*
   public void tester() {
     for(int i=0;i<5;i++){
       while("Blue".compareTo(getColor())==0){
         colorPanelSpark.setSpeed(.5);
       }
       rotateToColor("Blue");
+    }
+  }
+  */
+
+  public void forward(double leftTriggerPressure) {
+    colorPanelSpark.setSpeed(leftTriggerPressure);
+  }
+
+  public void backward(double rightTriggerPressure) {
+    colorPanelSpark.setSpeed(-rightTriggerPressure);
+  }
+
+  public void numOfRotation() {
+    startingColor = getColor();
+    
+    if(isAtStartingColor==true) {
+      colorPanelSpark.setSpeed(0.5);
+      if(getColor()!=startingColor) {
+        isAtStartingColor = false;
+      }
+    } else {
+      rotateToColor(startingColor);
+      numOfRots++;
+      if(numOfRots!=4)
+      {
+        isAtStartingColor=true;
+        colorPanelSpark.setSpeed(0.5);
+      }
     }
   }
   
