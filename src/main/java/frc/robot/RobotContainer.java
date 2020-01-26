@@ -7,8 +7,11 @@
 
 package frc.robot;
 
+//import org.graalvm.compiler.core.common.type.ArithmeticOpTable.BinaryOp.Xor;
+
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.ColorPanelRotator;
@@ -45,6 +48,16 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the button bindings
     configureButtonBindings();
+    //colorPanelRotator.setDefaultCommand(new RunCommand(()->colorPanelRotator.forward(xboxController.getRawAxis(2)),colorPanelRotator));
+    //colorPanelRotator
+      //.setCommand(new RunCommand(()->colorPanelRotator.backward(xboxController.getRawAxis(3)),colorPanelRotator))
+      //.(new RunCommand(()->colorPanelRotator.forward(xboxController.getRawAxis(2)),colorPanelRotator));
+    colorPanelRotator
+      .setDefaultCommand(new RunCommand(()->colorPanelRotator.manualRotation(xboxController.getRawAxis(2), 
+        xboxController.getRawAxis(3)), colorPanelRotator));
+
+
+
     driveSubsystem
         .setDefaultCommand(new RunCommand(() -> driveSubsystem.arcadeDrive(xboxController.getY(GenericHID.Hand.kLeft),
             xboxController.getX(GenericHID.Hand.kRight)), driveSubsystem));
@@ -78,21 +91,13 @@ public class RobotContainer {
         .whenReleased(new SequentialCommandGroup(
           new InstantCommand(shootSub::stopShooter, shootSub),
           new InstantCommand(loadSub::stopLoader, loadSub)));
-    
-    
-
-     colorPanelRotator.leftTriggerPressure = xboxController.getTriggerAxis(GenericHID.Hand.kLeft);
-     colorPanelRotator.rightTriggerPressure = xboxController.getTriggerAxis(GenericHID.Hand.kRight);
-     
-     new JoystickButton(xboxController, GenericHID.Hand.kLeft.value)
-      .whileHeld(new InstantCommand(() -> colorPanelRotator.forward(xboxController.getTriggerAxis(GenericHID.Hand.kLeft))));
-
+      
      // colorPanelRotator
        // .getCurrentCommand(new InstantCommand(() -> colorPanelRotator.forward(xboxController.getTriggerAxis(GenericHID.Hand.kLeft))))
         //.getCurrentCommand(new InstantCommand(() -> colorPanelRotator.backward(xboxController.getTriggerAxis(GenericHID.Hand.kRight))));
 
   }
-
+  
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *

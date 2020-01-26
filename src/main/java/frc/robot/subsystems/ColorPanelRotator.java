@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.XboxController;
-
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -116,12 +116,27 @@ public class ColorPanelRotator extends SubsystemBase {
   }
   */
 
-  public void forward(double leftTriggerPressure) {
+  /*public void forward(double leftTriggerPressure) {
     colorPanelSpark.setSpeed(leftTriggerPressure);
   }
 
   public void backward(double rightTriggerPressure) {
     colorPanelSpark.setSpeed(-rightTriggerPressure);
+  }*/
+
+  public void manualRotation(double leftTriggerPressure, double rightTriggerPressure) {
+    if(leftTriggerPressure!=0){
+      colorPanelSpark.setSpeed(leftTriggerPressure);
+    }
+    else if (rightTriggerPressure!=0){
+      colorPanelSpark.setSpeed(-rightTriggerPressure);
+    }
+    else{
+      colorPanelSpark.setSpeed(0);
+    }
+    SmartDashboard.putNumber("left", leftTriggerPressure);
+    SmartDashboard.putNumber("right", rightTriggerPressure);
+    SmartDashboard.updateValues();
   }
 
   public void numOfRotation() {
