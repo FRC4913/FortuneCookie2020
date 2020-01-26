@@ -19,7 +19,7 @@ public class ColorPanelRotator extends SubsystemBase {
   private final ColorSensorV3 colorSensor = new ColorSensorV3(Constants.I2C_PORT);
   private final Spark colorPanelSpark = new Spark(Constants.COLOR_PANEL_ROTATOR_MOTOR_ID);
   private int numOfRots=0;
-  private String startingColor;
+  private String startingColor="";
   private boolean isAtStartingColor = true;
 
   public double leftTriggerPressure;
@@ -64,9 +64,6 @@ public class ColorPanelRotator extends SubsystemBase {
       if(colorString == targetColor){
         colorPanelSpark.setSpeed(0);
       }
-      else {
-      colorPanelSpark.setSpeed(0.5);
-    }
   }
 
   public String getColor(){
@@ -139,24 +136,36 @@ public class ColorPanelRotator extends SubsystemBase {
     SmartDashboard.putNumber("right", rightTriggerPressure);
     SmartDashboard.updateValues();
   }
+  public void startNum(){
+    startingColor="";
+  }
 
   public void numOfRotation() {
-    startingColor = getColor();
-    
-    if(isAtStartingColor==true) {
-      colorPanelSpark.setSpeed(0.5);
-      if(getColor()!=startingColor) {
-        isAtStartingColor = false;
+    if(startingColor.length()>0){
+      if(numOfRots<4){
+        if(startingColor==getColor()){
+          colorPanelSpark.setSpeed(0.5);
+          if(!isAtStartingColor){
+            numOfRots++;
+            isAtStartingColor=true;
+          }
+        }
+        else{
+          rotateToColor(startingColor);
+          isAtStartingColor=false;
+        }
       }
-    } else {
-      rotateToColor(startingColor);
-      numOfRots++;
-      if(numOfRots!=4)
-      {
-        isAtStartingColor=true;
-        colorPanelSpark.setSpeed(0.5);
+      else{
+        colorPanelSpark.setSpeed(0);
       }
     }
+    else{
+      startingColor=getColor();
+      numOfRots=0;
+    }
+    SmartDashboard.putString("stcol", startingColor);
+    SmartDashboard.putNumber("numberOr rat", numOfRots);
+    SmartDashboard.updateValues();
   }
   
 

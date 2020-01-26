@@ -75,7 +75,9 @@ public class RobotContainer {
         .whenReleased(new InstantCommand(colorPanelRotator::stop, colorPanelRotator));
 
     new JoystickButton(xboxController, Button.kA.value)
-        .whenPressed(new InstantCommand(colorPanelRotator::numOfRotation, colorPanelRotator));
+        .whileHeld(new InstantCommand(colorPanelRotator::numOfRotation, colorPanelRotator))
+
+        .whenReleased(new InstantCommand(colorPanelRotator::startNum, colorPanelRotator));
         //.whileHeld(new InstantCommand(colorPanelRotator::tester, colorPanelRotator))
         //.whenReleased(new InstantCommand(colorPanelRotator::stop, colorPanelRotator));
 
