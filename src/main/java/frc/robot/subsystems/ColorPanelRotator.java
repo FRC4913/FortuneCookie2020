@@ -30,6 +30,7 @@ public class ColorPanelRotator extends SubsystemBase {
 
   public void rotateToGameColor(){
     String colorChar = DriverStation.getInstance().getGameSpecificMessage();
+    SmartDashboard.putString("colorchar", colorChar);
     if (colorChar.length() > 0) {
     switch (DriverStation.getInstance().getGameSpecificMessage().charAt(0)) {
       case 'B':
@@ -52,19 +53,19 @@ public class ColorPanelRotator extends SubsystemBase {
         break;
       }
     } else{
+      // Code for no data received
       colorPanelSpark.setSpeed(0);
     }
   }
 
   public void rotateToColor(String targetColor) {
       colorPanelSpark.setSpeed(0.5);
-      String colorString=getColor();
+      String colorString=getColor(); 
       if(colorString == targetColor){
         colorPanelSpark.setSpeed(0);
       }
       else {
-      // Code for no data received yet
-      colorPanelSpark.setSpeed(0);
+      colorPanelSpark.setSpeed(0.5);
     }
   }
 

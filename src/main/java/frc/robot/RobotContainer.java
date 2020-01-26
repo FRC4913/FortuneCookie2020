@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.XboxController.Button;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.ColorPanelRotator;
 import frc.robot.subsystems.DriveSubsystem;
@@ -25,6 +26,7 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj.Timer;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -55,8 +57,6 @@ public class RobotContainer {
     colorPanelRotator
       .setDefaultCommand(new RunCommand(()->colorPanelRotator.manualRotation(xboxController.getRawAxis(2), 
         xboxController.getRawAxis(3)), colorPanelRotator));
-
-
 
     driveSubsystem
         .setDefaultCommand(new RunCommand(() -> driveSubsystem.arcadeDrive(xboxController.getY(GenericHID.Hand.kLeft),
@@ -104,6 +104,12 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
+    double time = Timer.getFPGATimestamp();
+    SmartDashboard.putNumber("autotime", time);
+    SmartDashboard.updateValues();
+    while(Timer.getFPGATimestamp()<=time+4) { 
+      driveSubsystem.arcadeDrive(.4, 0);
+    }
     return null;
   }
 }
