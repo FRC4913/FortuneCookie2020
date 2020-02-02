@@ -21,12 +21,11 @@ import edu.wpi.first.wpilibj.I2C;
  */
 public final class Constants {
 
-    public static final int INTAKER_MOTOR = 5;
     public static final class DriveConstants {
-        public static final int FRONT_LEFT_MOTOR_ID = 4;
-        public static final int FRONT_RIGHT_MOTOR_ID = 2;
-        public static final int REAR_LEFT_MOTOR_ID = 7;
-        public static final int REAR_RIGHT_MOTOR_ID = 6;
+        public static final int FRONT_LEFT_MOTOR_ID = 6;
+        public static final int FRONT_RIGHT_MOTOR_ID = 7;
+        public static final int REAR_LEFT_MOTOR_ID = 2;
+        public static final int REAR_RIGHT_MOTOR_ID = 4;
     }
 
     public static final class OIConstants {
@@ -35,5 +34,8 @@ public final class Constants {
 
     public static final int COLOR_PANEL_ROTATOR_MOTOR_ID = 0;
     public static final I2C.Port I2C_PORT = I2C.Port.kOnboard;
+    public static final int LOADER_MOTOR = 1;
+    public static final int INTAKER_MOTOR = 5;
+    public static final int SHOOTER_MOTOR = 3;
 
 }

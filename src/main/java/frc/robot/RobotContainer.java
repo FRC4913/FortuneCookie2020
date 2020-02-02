@@ -12,11 +12,12 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.ColorPanelRotator;
-import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.IntakerSubsystem;
+import frc.robot.subsystems.*;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 /**
@@ -31,6 +32,8 @@ public class RobotContainer {
   private final DriveSubsystem driveSubsystem = new DriveSubsystem();
   private final ColorPanelRotator colorPanelRotator = new ColorPanelRotator();
   private final IntakerSubsystem intakerSubsystem = new IntakerSubsystem();
+  private final LoaderSubsystem loaderSubsystem = new LoaderSubsystem();
+  private final ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
 
   XboxController xboxController = new XboxController(OIConstants.XBOX_CONTROLLER);
 
@@ -41,7 +44,8 @@ public class RobotContainer {
     // Configure the button bindings
     configureButtonBindings();
     driveSubsystem
-        .setDefaultCommand(new RunCommand(() -> driveSubsystem.drive(xboxController.getY(GenericHID.Hand.kLeft),
+        .setDefaultCommand(new RunCommand(
+            () -> driveSubsystem.drive(xboxController.getY(GenericHID.Hand.kLeft),
                 xboxController.getY(GenericHID.Hand.kRight), xboxController.getX(GenericHID.Hand.kRight)),
             driveSubsystem));
   }
@@ -61,6 +65,12 @@ public class RobotContainer {
     new JoystickButton(xboxController, Button.kBumperLeft.value)
         .whenPressed(new InstantCommand(intakerSubsystem::startIntaker, intakerSubsystem))
         .whenReleased(new InstantCommand(intakerSubsystem::stopIntaker, intakerSubsystem));
+
+    new JoystickButton(xboxController, Button.kBumperRight.value)
+        .whileHeld(new SequentialCommandGroup(new InstantCommand(shooterSubsystem::startShooter, shooterSubsystem),
+            new WaitCommand(1), new InstantCommand(loaderSubsystem::startLoader, loaderSubsystem)))
+        .whenReleased(new SequentialCommandGroup(new InstantCommand(shooterSubsystem::stopShooter, shooterSubsystem),
+            new InstantCommand(loaderSubsystem::stopLoader, loaderSubsystem)));
 
   }
 
