@@ -119,8 +119,9 @@ public class ColorPanelRotator extends SubsystemBase {
     // first move off the current color
     moveOffCurrentColor();
 
-    while (currentNumRotations < NUM_ROTATIONS) {
+    while (currentNumRotations <= NUM_ROTATIONS) {
       colorPanelSpark.setSpeed(MOTOR_SPEED);
+      SmartDashboard.putNumber("rotate", currentNumRotations);
       if (getColor() == startingColor) {
         colorPanelSpark.setSpeed(0);
         moveOffCurrentColor();
