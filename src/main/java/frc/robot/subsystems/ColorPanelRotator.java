@@ -18,10 +18,20 @@ public class ColorPanelRotator extends SubsystemBase {
   private final int NUM_ROTATIONS = 4;
   private final double MOTOR_SPEED = 0.4;
 
+  private final ColorMatch colorMatcher = new ColorMatch();
+  private final Color kBlueTarget = ColorMatch.makeColor(0.123, 0.427, 0.450);
+  private final Color kRedTarget = ColorMatch.makeColor(0.521, 0.346, 0.132);
+  private final Color kYellowTarget = ColorMatch.makeColor(0.317, 0.559, 0.124);
+  private final Color kGreenTarget = ColorMatch.makeColor(0.168, 0.577, 0.254);
+
   public double leftTriggerPressure;
   public double rightTriggerPressure;
 
   public ColorPanelRotator() {
+    colorMatcher.addColorMatch(kBlueTarget);
+    colorMatcher.addColorMatch(kGreenTarget);
+    colorMatcher.addColorMatch(kRedTarget);
+    colorMatcher.addColorMatch(kYellowTarget);
   }
 
   public void rotateToGameColor() {
@@ -63,20 +73,8 @@ public class ColorPanelRotator extends SubsystemBase {
   }
 
   public String getColor() {
-    ColorMatch colorMatcher = new ColorMatch();
-
-    Color kBlueTarget = ColorMatch.makeColor(0.123, 0.427, 0.450);
-    Color kRedTarget = ColorMatch.makeColor(0.521, 0.346, 0.132);
-    Color kYellowTarget = ColorMatch.makeColor(0.317, 0.559, 0.124);
-    Color kGreenTarget = ColorMatch.makeColor(0.168, 0.577, 0.254);
-
-    colorMatcher.addColorMatch(kBlueTarget);
-    colorMatcher.addColorMatch(kGreenTarget);
-    colorMatcher.addColorMatch(kRedTarget);
-    colorMatcher.addColorMatch(kYellowTarget);
-
     Color detectedColor = colorSensor.getColor();
-    String colorString;
+    String colorString = "Unknown";
     ColorMatchResult match = colorMatcher.matchClosestColor(detectedColor);
 
     if (match.color == kBlueTarget) {
@@ -87,9 +85,8 @@ public class ColorPanelRotator extends SubsystemBase {
       colorString = "Green";
     } else if (match.color == kYellowTarget) {
       colorString = "Yellow";
-    } else {
-      colorString = "Unknown";
     }
+
     SmartDashboard.updateValues();
     SmartDashboard.putString("DetectedColor", colorString);
     SmartDashboard.putNumber("red", detectedColor.red);
