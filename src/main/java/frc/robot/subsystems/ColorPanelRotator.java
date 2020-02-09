@@ -16,7 +16,7 @@ public class ColorPanelRotator extends SubsystemBase {
   private final Spark colorPanelSpark = new Spark(Constants.COLOR_PANEL_ROTATOR_MOTOR_ID);
 
   private final int NUM_ROTATIONS = 4;
-  private final double MOTOR_SPEED = 0.5;
+  private final double MOTOR_SPEED = 0.4;
 
   public double leftTriggerPressure;
   public double rightTriggerPressure;
@@ -65,10 +65,10 @@ public class ColorPanelRotator extends SubsystemBase {
   public String getColor() {
     ColorMatch colorMatcher = new ColorMatch();
 
-    Color kBlueTarget = ColorMatch.makeColor(0.122, 0.426, 0.451);
-    Color kRedTarget = ColorMatch.makeColor(0.523, 0.345, 0.132);
-    Color kYellowTarget = ColorMatch.makeColor(0.318, 0.560, 0.123);
-    Color kGreenTarget = ColorMatch.makeColor(0.167, 0.578, 0.256);
+    Color kBlueTarget = ColorMatch.makeColor(0.123, 0.427, 0.450);
+    Color kRedTarget = ColorMatch.makeColor(0.521, 0.346, 0.132);
+    Color kYellowTarget = ColorMatch.makeColor(0.317, 0.559, 0.124);
+    Color kGreenTarget = ColorMatch.makeColor(0.168, 0.577, 0.254);
 
     colorMatcher.addColorMatch(kBlueTarget);
     colorMatcher.addColorMatch(kGreenTarget);
@@ -107,6 +107,7 @@ public class ColorPanelRotator extends SubsystemBase {
     } else {
       colorPanelSpark.setSpeed(0);
     }
+    getColor();
     SmartDashboard.putNumber("left", leftTriggerPressure);
     SmartDashboard.putNumber("right", rightTriggerPressure);
     SmartDashboard.updateValues();
@@ -119,13 +120,12 @@ public class ColorPanelRotator extends SubsystemBase {
     // first move off the current color
     moveOffCurrentColor();
 
-    while (currentNumRotations <= NUM_ROTATIONS) {
+    while (currentNumRotations < NUM_ROTATIONS) {
       colorPanelSpark.setSpeed(MOTOR_SPEED);
-      SmartDashboard.putNumber("rotate", currentNumRotations);
       if (getColor() == startingColor) {
+        currentNumRotations++;
         colorPanelSpark.setSpeed(0);
         moveOffCurrentColor();
-        currentNumRotations++;
       }
     }
     colorPanelSpark.setSpeed(0);
