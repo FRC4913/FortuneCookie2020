@@ -7,11 +7,8 @@
 
 package frc.robot;
 
-//import org.graalvm.compiler.core.common.type.ArithmeticOpTable.BinaryOp.Xor;
-
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.OIConstants;
@@ -50,10 +47,6 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the button bindings
     configureButtonBindings();
-    //colorPanelRotator.setDefaultCommand(new RunCommand(()->colorPanelRotator.forward(xboxController.getRawAxis(2)),colorPanelRotator));
-    //colorPanelRotator
-      //.setCommand(new RunCommand(()->colorPanelRotator.backward(xboxController.getRawAxis(3)),colorPanelRotator))
-      //.(new RunCommand(()->colorPanelRotator.forward(xboxController.getRawAxis(2)),colorPanelRotator));
     colorPanelRotator
       .setDefaultCommand(new RunCommand(()->colorPanelRotator.manualRotation(xboxController.getRawAxis(2), 
         xboxController.getRawAxis(3)), colorPanelRotator));
@@ -75,12 +68,9 @@ public class RobotContainer {
         .whenReleased(new InstantCommand(colorPanelRotator::stop, colorPanelRotator));
 
     new JoystickButton(xboxController, Button.kA.value)
-        .whileHeld(new InstantCommand(colorPanelRotator::numOfRotation, colorPanelRotator))
-
+        .whileHeld(new InstantCommand(colorPanelRotator::rotateByNumber, colorPanelRotator))
         .whenReleased(new InstantCommand(colorPanelRotator::startNum, colorPanelRotator));
-        //.whileHeld(new InstantCommand(colorPanelRotator::tester, colorPanelRotator))
-        //.whenReleased(new InstantCommand(colorPanelRotator::stop, colorPanelRotator));
-
+  
     new JoystickButton(xboxController, Button.kBumperLeft.value)
         .whileHeld(new InstantCommand(intakeSub::startIntaker, intakeSub))
         .whenReleased(new InstantCommand(intakeSub::stopIntaker, intakeSub));
@@ -93,11 +83,6 @@ public class RobotContainer {
         .whenReleased(new SequentialCommandGroup(
           new InstantCommand(shootSub::stopShooter, shootSub),
           new InstantCommand(loadSub::stopLoader, loadSub)));
-      
-     // colorPanelRotator
-       // .getCurrentCommand(new InstantCommand(() -> colorPanelRotator.forward(xboxController.getTriggerAxis(GenericHID.Hand.kLeft))))
-        //.getCurrentCommand(new InstantCommand(() -> colorPanelRotator.backward(xboxController.getTriggerAxis(GenericHID.Hand.kRight))));
-
   }
   
   /**
