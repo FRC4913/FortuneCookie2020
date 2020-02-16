@@ -10,11 +10,12 @@ public class IntakerSubsystem extends SubsystemBase {
     public void startIntaker() {
         intakerTalonSRX.set(1);
     }
-  
+
     /**
      * Releases the hatch.
      */
     public void stopIntaker() {
         intakerTalonSRX.set(0);
     }
-  }
+
+}

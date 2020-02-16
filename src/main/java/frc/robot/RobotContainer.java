@@ -10,20 +10,14 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.OIConstants;
-import frc.robot.subsystems.ColorPanelRotator;
-import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.IntakerSubsystem;
-import frc.robot.subsystems.LoaderSubsystem;
-import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.*;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import edu.wpi.first.wpilibj.Timer;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -35,9 +29,9 @@ import edu.wpi.first.wpilibj.Timer;
 public class RobotContainer {
   private final DriveSubsystem driveSubsystem = new DriveSubsystem();
   private final ColorPanelRotator colorPanelRotator = new ColorPanelRotator();
-  private final IntakerSubsystem intakeSub = new IntakerSubsystem();
-  private final LoaderSubsystem loadSub = new LoaderSubsystem();
-  private final ShooterSubsystem shootSub = new ShooterSubsystem();
+  private final IntakerSubsystem intakerSubsystem = new IntakerSubsystem();
+  private final LoaderSubsystem loaderSubsystem = new LoaderSubsystem();
+  private final ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
 
   XboxController xboxController = new XboxController(OIConstants.XBOX_CONTROLLER);
 
@@ -47,13 +41,15 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the button bindings
     configureButtonBindings();
-    colorPanelRotator
-      .setDefaultCommand(new RunCommand(()->colorPanelRotator.manualRotation(xboxController.getRawAxis(2), 
-        xboxController.getRawAxis(3)), colorPanelRotator));
+    colorPanelRotator.setDefaultCommand(new RunCommand(
+        () -> colorPanelRotator.manualRotation(xboxController.getRawAxis(2), xboxController.getRawAxis(3)),
+        colorPanelRotator));
 
     driveSubsystem
-        .setDefaultCommand(new RunCommand(() -> driveSubsystem.arcadeDrive(xboxController.getY(GenericHID.Hand.kLeft),
-            xboxController.getX(GenericHID.Hand.kRight)), driveSubsystem));
+        .setDefaultCommand(new RunCommand(
+            () -> driveSubsystem.drive(xboxController.getY(GenericHID.Hand.kLeft),
+                xboxController.getY(GenericHID.Hand.kRight), xboxController.getX(GenericHID.Hand.kRight)),
+            driveSubsystem));
   }
 
   /**
@@ -66,37 +62,29 @@ public class RobotContainer {
     new JoystickButton(xboxController, Button.kB.value)
         .whileHeld(new InstantCommand(colorPanelRotator::rotateToGameColor, colorPanelRotator))
         .whenReleased(new InstantCommand(colorPanelRotator::stop, colorPanelRotator));
+    new JoystickButton(xboxController, Button.kBack.value).whenPressed(() -> driveSubsystem.convertToTank());
+    new JoystickButton(xboxController, Button.kStart.value).whenPressed(() -> driveSubsystem.convertToArcade());
+    new JoystickButton(xboxController, Button.kBumperLeft.value)
+        .whenPressed(new InstantCommand(intakerSubsystem::startIntaker, intakerSubsystem))
+        .whenReleased(new InstantCommand(intakerSubsystem::stopIntaker, intakerSubsystem));
+
+    new JoystickButton(xboxController, Button.kBumperRight.value)
+        .whileHeld(new SequentialCommandGroup(new InstantCommand(shooterSubsystem::startShooter, shooterSubsystem),
+            new WaitCommand(1), new InstantCommand(loaderSubsystem::startLoader, loaderSubsystem)))
+        .whenReleased(new SequentialCommandGroup(new InstantCommand(shooterSubsystem::stopShooter, shooterSubsystem),
+            new InstantCommand(loaderSubsystem::stopLoader, loaderSubsystem)));
 
     new JoystickButton(xboxController, Button.kA.value)
         .whileHeld(new InstantCommand(colorPanelRotator::rotateByNumber, colorPanelRotator))
         .whenReleased(new InstantCommand(colorPanelRotator::startNum, colorPanelRotator));
-  
-    new JoystickButton(xboxController, Button.kBumperLeft.value)
-        .whileHeld(new InstantCommand(intakeSub::startIntaker, intakeSub))
-        .whenReleased(new InstantCommand(intakeSub::stopIntaker, intakeSub));
-
-    new JoystickButton(xboxController, Button.kY.value)
-        .whileHeld(new SequentialCommandGroup(
-          new InstantCommand(shootSub::startShooter, shootSub),
-          new WaitCommand(2),
-          new InstantCommand(loadSub::startLoader, loadSub)))
-        .whenReleased(new SequentialCommandGroup(
-          new InstantCommand(shootSub::stopShooter, shootSub),
-          new InstantCommand(loadSub::stopLoader, loadSub)));
   }
-  
+
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    double time = Timer.getFPGATimestamp();
-    SmartDashboard.putNumber("autotime", time);
-    SmartDashboard.updateValues();
-    while(Timer.getFPGATimestamp()<=time+4) { 
-      driveSubsystem.arcadeDrive(.4, 0);
-    }
     return null;
   }
 }

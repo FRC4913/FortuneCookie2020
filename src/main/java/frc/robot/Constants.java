@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj.I2C;
  * wherever the constants are needed, to reduce verbosity.
  */
 public final class Constants {
+
     public static final class DriveConstants {
         public static final int FRONT_LEFT_MOTOR_ID = 6;
         public static final int FRONT_RIGHT_MOTOR_ID = 7;
