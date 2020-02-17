@@ -42,17 +42,21 @@ public class ColorPanelRotator extends SubsystemBase {
     if (colorChar.length() > 0) {
       switch (DriverStation.getInstance().getGameSpecificMessage().charAt(0)) {
       case 'B':
+      case 'b':
         rotateToColor("Blue");
         break;
       case 'G':
+      case 'g':
         // Green case code
         rotateToColor("Green");
         break;
       case 'R':
+      case 'r':
         // Red case code
         rotateToColor("Red");
         break;
       case 'Y':
+      case 'y':
         // Yellow case code
         rotateToColor("Yellow");
         break;
@@ -67,11 +71,10 @@ public class ColorPanelRotator extends SubsystemBase {
   }
 
   public void rotateToColor(String targetColor) {
-    colorPanelSpark.setSpeed(MOTOR_SPEED);
-    String colorString = getColor();
-    if (colorString == targetColor) {
-      colorPanelSpark.setSpeed(0);  ;
+    if (getColor() == targetColor) {
+      colorPanelSpark.stopMotor();
     }
+    else colorPanelSpark.setSpeed(MOTOR_SPEED);
   }
 
   public String getColor() {
@@ -151,12 +154,12 @@ public class ColorPanelRotator extends SubsystemBase {
     moveOffCurrentColor();
 
     while (currentNumRotations < 1) {
-      colorPanelSpark.setSpeed(MOTOR_SPEED);
       if (getColor() == startingColor) {
         currentNumRotations++;
         colorPanelSpark.setSpeed(0);
         moveOffCurrentColor();
       }
+      else colorPanelSpark.setSpeed(MOTOR_SPEED);
     }
     colorPanelSpark.setSpeed(0);
   }
