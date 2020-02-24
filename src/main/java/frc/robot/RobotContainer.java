@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import frc.robot.Constants.OIConstants;
-import frc.robot.subsystems.ColorPanelRotator;
 import frc.robot.subsystems.*;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -28,7 +27,6 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
  * commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-
   private final DriveSubsystem driveSubsystem = new DriveSubsystem();
   private final ColorPanelRotator colorPanelRotator = new ColorPanelRotator();
   private final IntakerSubsystem intakerSubsystem = new IntakerSubsystem();
@@ -43,6 +41,10 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the button bindings
     configureButtonBindings();
+    colorPanelRotator.setDefaultCommand(new RunCommand(
+        () -> colorPanelRotator.manualRotation(xboxController.getRawAxis(2), xboxController.getRawAxis(3)),
+        colorPanelRotator));
+
     driveSubsystem
         .setDefaultCommand(new RunCommand(
             () -> driveSubsystem.drive(xboxController.getY(GenericHID.Hand.kLeft),
@@ -58,7 +60,7 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     new JoystickButton(xboxController, Button.kB.value)
-        .whenPressed(new InstantCommand(colorPanelRotator::rotate, colorPanelRotator))
+        .whileHeld(new InstantCommand(colorPanelRotator::rotateToGameColor, colorPanelRotator))
         .whenReleased(new InstantCommand(colorPanelRotator::stop, colorPanelRotator));
     new JoystickButton(xboxController, Button.kBack.value).whenPressed(() -> driveSubsystem.convertToTank());
     new JoystickButton(xboxController, Button.kStart.value).whenPressed(() -> driveSubsystem.convertToArcade());
@@ -72,6 +74,9 @@ public class RobotContainer {
         .whenReleased(new SequentialCommandGroup(new InstantCommand(shooterSubsystem::stopShooter, shooterSubsystem),
             new InstantCommand(loaderSubsystem::stopLoader, loaderSubsystem)));
 
+    new JoystickButton(xboxController, Button.kA.value)
+        .whileHeld(new InstantCommand(colorPanelRotator::rotateByNumber, colorPanelRotator))
+        .whenReleased(new InstantCommand(colorPanelRotator::startNum, colorPanelRotator));
   }
 
   /**

@@ -37,5 +37,4 @@ public final class Constants {
     public static final int LOADER_MOTOR = 1;
     public static final int INTAKER_MOTOR = 5;
     public static final int SHOOTER_MOTOR = 3;
-
 }
