@@ -7,9 +7,12 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -22,6 +25,9 @@ public class Robot extends TimedRobot {
 
   private RobotContainer m_robotContainer;
 
+  //private DutyCycleEncoder m_dutyCycleEncoder;
+  private Encoder encody; 
+
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -31,6 +37,12 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
+
+    encody = new Encoder(1,2);
+    encody.setDistancePerPulse((7.25*Math.PI)/2048);
+    encody.reset();
+    // Set to 0.5 units per rotation
+    //m_dutyCycleEncoder.setDistancePerRotation(0.5);
   }
 
   /**
@@ -47,6 +59,30 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
+/*
+    // Connected can be checked, and uses the frequency of the encoder
+    boolean connected = m_dutyCycleEncoder.isConnected();
+
+    // Duty Cycle Frequency in Hz
+    int frequency = m_dutyCycleEncoder.getFrequency();
+
+    // Output of encoder
+    double output = encody.get();
+
+    // Output scaled by DistancePerPulse
+    double distance = encody.getDistance();
+    double rate = encody.getRate();
+    */
+
+    SmartDashboard.putNumber("Encoder:Count", encody.get());
+    SmartDashboard.putNumber("Encoder:DistancePerPulse", encody.getDistancePerPulse());
+    SmartDashboard.putNumber("Encoder:SamplesToAverage", encody.getSamplesToAverage());
+    SmartDashboard.putBoolean("Encoder:Direction", encody.getDirection());
+    SmartDashboard.putNumber("Encoder:Raw", encody.getRaw());
+    SmartDashboard.putNumber("Encoder:Rate", encody.getRate());
+    SmartDashboard.putNumber("Encoder:EncodingScale", encody.getEncodingScale());
+    SmartDashboard.putBoolean("Encoder:Stopped", encody.getStopped());
+    SmartDashboard.putNumber("Encoder:Distance", encody.getDistance());
   }
 
   /**

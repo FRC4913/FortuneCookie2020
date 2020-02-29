@@ -71,16 +71,24 @@ public class RobotContainer {
 
     new JoystickButton(xboxController, Button.kBack.value).whenPressed(() -> driveSubsystem.convertToTank());
     new JoystickButton(xboxController, Button.kStart.value).whenPressed(() -> driveSubsystem.convertToArcade());
+    new JoystickButton(xboxController, Button.kBumperRight.value) 
+        .whenPressed(new InstantCommand(shooterSubsystem::startPusher,shooterSubsystem))
+        .whenReleased(new InstantCommand(shooterSubsystem::stopPusher, shooterSubsystem));
 
     new JoystickButton(xboxController, Button.kBumperLeft.value)
         .whenPressed(new InstantCommand(intakerSubsystem::startIntaker, intakerSubsystem))
-        .whenReleased(new InstantCommand(intakerSubsystem::stopIntaker, intakerSubsystem));
+        .whenPressed(new InstantCommand(loaderSubsystem::startLoader, loaderSubsystem))
+        .whenReleased(new InstantCommand(intakerSubsystem::stopIntaker, intakerSubsystem))
+        .whenReleased(new InstantCommand(loaderSubsystem::stopLoader, loaderSubsystem));
 
-    new JoystickButton(xboxController, Button.kBumperRight.value)
+    //new JoystickButton(xboxController, Button.kBumperRight.value)
+      //.whenPressed(new InstantCommand(shooterSubsystem::startShooter, shooterSubsystem));
+
+    /*new JoystickButton(xboxController, Button.kBumperRight.value)
         .whileHeld(new SequentialCommandGroup(new InstantCommand(shooterSubsystem::startShooter, shooterSubsystem),
             new WaitCommand(1), new InstantCommand(loaderSubsystem::startLoader, loaderSubsystem)))
         .whenReleased(new SequentialCommandGroup(new InstantCommand(shooterSubsystem::stopShooter, shooterSubsystem),
-            new InstantCommand(loaderSubsystem::stopLoader, loaderSubsystem)));
+            new InstantCommand(loaderSubsystem::stopLoader, loaderSubsystem)));*/
 
   }
 

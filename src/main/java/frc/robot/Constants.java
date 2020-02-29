@@ -7,6 +7,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.DigitalSource;
 import edu.wpi.first.wpilibj.I2C;
 
 /**
@@ -26,6 +27,12 @@ public final class Constants {
         public static final int FRONT_RIGHT_MOTOR_ID = 7;
         public static final int REAR_LEFT_MOTOR_ID = 2;
         public static final int REAR_RIGHT_MOTOR_ID = 4;
+		public static final DigitalSource[] kLeftEncoderPorts = null;
+		public static final DigitalSource kLeftEncoderReversed = null;
+		public static final DigitalSource kRightEncoderReversed = null;
+		public static final DigitalSource[] kRightEncoderPorts = null;
+		public static final double kEncoderDistancePerPulse = (.0254*7.25*Math.PI)/2048;
+		public static final boolean kGyroReversed = false;
     }
 
     public static final class OIConstants {
@@ -34,8 +41,10 @@ public final class Constants {
 
     public static final int COLOR_PANEL_ROTATOR_MOTOR_ID = 0;
     public static final I2C.Port I2C_PORT = I2C.Port.kOnboard;
-    public static final int LOADER_MOTOR = 1;
+    public static final int LOADER_MOTOR = 8; //Temporary placeholder
+    public static final int PUSHER_MOTOR = 9; //Temp
     public static final int INTAKER_MOTOR = 5;
-    public static final int SHOOTER_MOTOR = 3;
+    public static final int SHOOTER_MOTOR_RIGHT = 3;
+    public static final int SHOOTER_MOTOR_LEFT = 1;
 
 }
