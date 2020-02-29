@@ -44,7 +44,14 @@ public final class Constants {
     public static final int LOADER_MOTOR = 8; //Temporary placeholder
     public static final int PUSHER_MOTOR = 9; //Temp
     public static final int INTAKER_MOTOR = 5;
+<<<<<<< Updated upstream
     public static final int SHOOTER_MOTOR_RIGHT = 3;
     public static final int SHOOTER_MOTOR_LEFT = 1;
 
+=======
+    public static final int SHOOTER_LEFT_MOTOR = 3;
+    public static final int SHOOTER_RIGHT_MOTOR = 4; //placeholder
+    public static final int PUSHER_MOTOR = 6; //placeholder
+    public static final int CLIMBER_MOTOR = 7; //placeholder
+>>>>>>> Stashed changes
 }

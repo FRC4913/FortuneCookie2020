@@ -88,8 +88,12 @@ public class RobotContainer {
         .whileHeld(new SequentialCommandGroup(new InstantCommand(shooterSubsystem::startShooter, shooterSubsystem),
             new WaitCommand(1), new InstantCommand(loaderSubsystem::startLoader, loaderSubsystem)))
         .whenReleased(new SequentialCommandGroup(new InstantCommand(shooterSubsystem::stopShooter, shooterSubsystem),
+<<<<<<< Updated upstream
             new InstantCommand(loaderSubsystem::stopLoader, loaderSubsystem)));*/
 
+=======
+            new InstantCommand(loaderSubsystem::stopLoader, loaderSubsystem)));
+>>>>>>> Stashed changes
   }
 
   /**
