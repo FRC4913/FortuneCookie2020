@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.cameraserver.CameraServer;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -32,6 +33,7 @@ public class RobotContainer {
   private final IntakerSubsystem intakerSubsystem = new IntakerSubsystem();
   private final LoaderSubsystem loaderSubsystem = new LoaderSubsystem();
   private final ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
+
 
   XboxController xboxController = new XboxController(OIConstants.XBOX_CONTROLLER);
 
@@ -50,6 +52,9 @@ public class RobotContainer {
             () -> driveSubsystem.drive(xboxController.getY(GenericHID.Hand.kLeft),
                 xboxController.getY(GenericHID.Hand.kRight), xboxController.getX(GenericHID.Hand.kRight)),
             driveSubsystem));
+
+    //live-camera (microsoft HD-3000)
+    CameraServer.getInstance().startAutomaticCapture(0);
   }
 
   /**
