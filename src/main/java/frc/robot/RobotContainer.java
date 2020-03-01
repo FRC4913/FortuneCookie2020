@@ -70,8 +70,8 @@ public class RobotContainer {
     new JoystickButton(xboxController, Button.kBack.value).whenPressed(() -> driveSubsystem.convertToTank());
     new JoystickButton(xboxController, Button.kStart.value).whenPressed(() -> driveSubsystem.convertToArcade());
     new JoystickButton(xboxController, Button.kBumperLeft.value)
-        .whenPressed(new InstantCommand(intakerSubsystem::startIntaker, intakerSubsystem))
-        .whenReleased(new InstantCommand(intakerSubsystem::stopIntaker, intakerSubsystem));
+        .whenPressed(new InstantCommand(intakerSubsystem::intake, intakerSubsystem))
+        .whenReleased(new InstantCommand(intakerSubsystem::stop, intakerSubsystem));
 
     new JoystickButton(xboxController, Button.kBumperRight.value)
         .whileHeld(new SequentialCommandGroup(new InstantCommand(shooterSubsystem::startShooter, shooterSubsystem),

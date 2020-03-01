@@ -5,17 +5,31 @@ import frc.robot.Constants;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 public class IntakerSubsystem extends SubsystemBase {
-    public final WPI_TalonSRX intakerTalonSRX = new WPI_TalonSRX(Constants.INTAKER_MOTOR);
+    private final WPI_TalonSRX intakerTalonSRX = new WPI_TalonSRX(Constants.INTAKER_MOTOR);
+    private final WPI_TalonSRX loaderTalonSRX = new WPI_TalonSRX(Constants.LOADER_MOTOR);
 
     public void startIntaker() {
         intakerTalonSRX.set(1);
     }
 
-    /**
-     * Releases the hatch.
-     */
     public void stopIntaker() {
         intakerTalonSRX.set(0);
+    }
+
+    /**
+     * Turn on intaker mechanism. Also turns on the loader motor.
+     */
+    public void intake() {
+        intakerTalonSRX.set(1);
+        loaderTalonSRX.set(1);
+    }
+
+    /**
+     * Stop the intaker mechanism.
+     */
+    public void stop() {
+        intakerTalonSRX.set(0);
+        loaderTalonSRX.set(0);
     }
 
 }
