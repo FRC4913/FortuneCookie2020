@@ -34,6 +34,7 @@ public class RobotContainer {
   private final IntakerSubsystem intakerSubsystem = new IntakerSubsystem();
   private final LoaderSubsystem loaderSubsystem = new LoaderSubsystem();
   private final ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
+  private final PixySubsystem pixySubsystem = new PixySubsystem();
 
   XboxController xboxController = new XboxController(OIConstants.XBOX_CONTROLLER);
 
@@ -52,6 +53,9 @@ public class RobotContainer {
             () -> driveSubsystem.drive(xboxController.getY(GenericHID.Hand.kLeft),
                 xboxController.getY(GenericHID.Hand.kRight), xboxController.getX(GenericHID.Hand.kRight)),
             driveSubsystem));
+
+    //pixy2
+    pixySubsystem.init();
   }
 
   /**
@@ -82,6 +86,10 @@ public class RobotContainer {
         .whenReleased(new SequentialCommandGroup(new InstantCommand(shooterSubsystem::stopShooter, shooterSubsystem),
             new InstantCommand(loaderSubsystem::stopLoader, loaderSubsystem)));
 
+  }
+
+  public void periodicCall(){
+      pixySubsystem.periodicUpdateLog();
   }
 
   /**
