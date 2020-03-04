@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import frc.robot.Constants.OIConstants;
-import frc.robot.subsystems.ColorPanelRotator;
 import frc.robot.subsystems.*;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -19,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.cameraserver.CameraServer;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -28,13 +28,13 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
  * commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-
   private final DriveSubsystem driveSubsystem = new DriveSubsystem();
   private final ColorPanelRotator colorPanelRotator = new ColorPanelRotator();
   private final IntakerSubsystem intakerSubsystem = new IntakerSubsystem();
   private final LoaderSubsystem loaderSubsystem = new LoaderSubsystem();
   private final ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
   private final PixySubsystem pixySubsystem = new PixySubsystem();
+
 
   XboxController xboxController = new XboxController(OIConstants.XBOX_CONTROLLER);
 
@@ -56,6 +56,8 @@ public class RobotContainer {
 
     //pixy2
     pixySubsystem.init();
+    //live-camera (microsoft HD-3000)
+    CameraServer.getInstance().startAutomaticCapture(0);
   }
 
   /**
@@ -86,6 +88,9 @@ public class RobotContainer {
         .whenReleased(new SequentialCommandGroup(new InstantCommand(shooterSubsystem::stopShooter, shooterSubsystem),
             new InstantCommand(loaderSubsystem::stopLoader, loaderSubsystem)));
 
+    new JoystickButton(xboxController, Button.kA.value)
+        .whileHeld(new InstantCommand(colorPanelRotator::rotateByNumber, colorPanelRotator))
+        .whenReleased(new InstantCommand(colorPanelRotator::startNum, colorPanelRotator));
   }
 
   public void periodicCall(){
