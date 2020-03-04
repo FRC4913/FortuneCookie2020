@@ -11,6 +11,13 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
+
+//pixy2 libaries
+import io.github.pseudoresonance.pixy2api.*;
+import io.github.pseudoresonance.pixy2api.Pixy2CCC.Block;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import java.util.ArrayList;
+
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
  * each mode, as described in the TimedRobot documentation. If you change the name of this class or
@@ -22,6 +29,15 @@ public class Robot extends TimedRobot {
 
   private RobotContainer m_robotContainer;
 
+  
+    
+  private Pixy2 pixycam;
+  boolean isCamera = false;
+  //private SPILink spi;
+  int state=-1;
+
+
+
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -31,6 +47,11 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
+
+    //pixy2 camera
+    pixycam = Pixy2.createInstance(Pixy2.LinkType.SPI);
+
+    
   }
 
   /**
@@ -96,6 +117,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
+
   }
 
   @Override
@@ -109,5 +131,30 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void testPeriodic() {
+    
+    SmartDashboard.putString("testOutput", "hello");
+    
+    if(!isCamera)
+      state = pixycam.init(1); // if no camera present, try to initialize
+    isCamera = state>=0;
+    
+    SmartDashboard.putBoolean("Camera", isCamera);   //publish if we are connected
+    pixycam.getCCC().getBlocks(false,255,255); //run getBlocks with arguments to have the camera
+                                               //acquire target data
+    ArrayList<Block> blocks = pixycam.getCCC().getBlocks(); //assign the data to an ArrayList for convinience
+    if(blocks.size() > 0)
+    {
+      double xcoord = blocks.get(0).getX();       // x position of the largest target
+      double ycoord = blocks.get(0).getY();       // y position of the largest target
+      String data   = blocks.get(0).toString();   // string containing target info
+      SmartDashboard.putBoolean("present", true); // show there is a target present
+      SmartDashboard.putNumber("Xccord",xcoord);
+      SmartDashboard.putNumber("Ycoord", ycoord);
+      SmartDashboard.putString("Data", data );
+    }
+    else
+      SmartDashboard.putBoolean("present", false);
+    SmartDashboard.putNumber("size", blocks.size()); //push to dashboard how many targets are detected
+  
   }
 }

@@ -7,8 +7,12 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 public class LoaderSubsystem extends SubsystemBase {
     public final WPI_TalonSRX loaderTalonSRX = new WPI_TalonSRX(Constants.LOADER_MOTOR);
 
-    public void startLoader() {
+    public void startLoaderUp() {
         loaderTalonSRX.set(1);
+    }
+
+    public void startLoaderDown() {
+        loaderTalonSRX.set(-1);
     }
   
     /**

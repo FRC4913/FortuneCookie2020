@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.cameraserver.CameraServer;
 
+
 /**
  * This class is where the bulk of the robot should be declared. Since
  * Command-based is a "declarative" paradigm, very little robot logic should
@@ -36,6 +37,7 @@ public class RobotContainer {
 
 
   XboxController xboxController = new XboxController(OIConstants.XBOX_CONTROLLER);
+  XboxController xboxController2 = new XboxController(OIConstants.XBOX_CONTROLLER2);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -44,7 +46,7 @@ public class RobotContainer {
     // Configure the button bindings
     configureButtonBindings();
     colorPanelRotator.setDefaultCommand(new RunCommand(
-        () -> colorPanelRotator.manualRotation(xboxController.getRawAxis(2), xboxController.getRawAxis(3)),
+        () -> colorPanelRotator.manualRotation(xboxController2.getRawAxis(2), xboxController2.getRawAxis(3)),
         colorPanelRotator));
 
     driveSubsystem
@@ -55,8 +57,9 @@ public class RobotContainer {
 
     //live-camera (microsoft HD-3000)
     CameraServer.getInstance().startAutomaticCapture(0);
-  }
 
+  }
+  
   /**
    * Use this method to define your button->command mappings. Buttons can be
    * created by instantiating a {@link GenericHID} or one of its subclasses
@@ -64,24 +67,34 @@ public class RobotContainer {
    * passing it to a {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    new JoystickButton(xboxController, Button.kB.value)
+    new JoystickButton(xboxController2, Button.kBumperLeft.value)
         .whileHeld(new InstantCommand(colorPanelRotator::rotateToGameColor, colorPanelRotator))
         .whenReleased(new InstantCommand(colorPanelRotator::stop, colorPanelRotator));
     new JoystickButton(xboxController, Button.kBack.value).whenPressed(() -> driveSubsystem.convertToTank());
     new JoystickButton(xboxController, Button.kStart.value).whenPressed(() -> driveSubsystem.convertToArcade());
-    new JoystickButton(xboxController, Button.kBumperLeft.value)
+    new JoystickButton(xboxController2, Button.kB.value)
         .whenPressed(new InstantCommand(intakerSubsystem::startIntaker, intakerSubsystem))
         .whenReleased(new InstantCommand(intakerSubsystem::stopIntaker, intakerSubsystem));
 
-    new JoystickButton(xboxController, Button.kBumperRight.value)
+    //loader
+    new JoystickButton(xboxController, Button.kY.value)
         .whileHeld(new SequentialCommandGroup(new InstantCommand(shooterSubsystem::startShooter, shooterSubsystem),
-            new WaitCommand(1), new InstantCommand(loaderSubsystem::startLoader, loaderSubsystem)))
+            new WaitCommand(1), new InstantCommand(loaderSubsystem::startLoaderUp, loaderSubsystem)))
         .whenReleased(new SequentialCommandGroup(new InstantCommand(shooterSubsystem::stopShooter, shooterSubsystem),
             new InstantCommand(loaderSubsystem::stopLoader, loaderSubsystem)));
-
     new JoystickButton(xboxController, Button.kA.value)
+        .whileHeld(new SequentialCommandGroup(new InstantCommand(shooterSubsystem::startShooter, shooterSubsystem),
+            new WaitCommand(1), new InstantCommand(loaderSubsystem::startLoaderDown, loaderSubsystem)))
+        .whenReleased(new SequentialCommandGroup(new InstantCommand(shooterSubsystem::stopShooter, shooterSubsystem),
+            new InstantCommand(loaderSubsystem::stopLoader, loaderSubsystem)));
+    
+    
+
+    new JoystickButton(xboxController2, Button.kBumperRight.value)
         .whileHeld(new InstantCommand(colorPanelRotator::rotateByNumber, colorPanelRotator))
         .whenReleased(new InstantCommand(colorPanelRotator::startNum, colorPanelRotator));
+
+    
   }
 
   /**

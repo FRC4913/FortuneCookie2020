@@ -30,11 +30,14 @@ public final class Constants {
 
     public static final class OIConstants {
         public static final int XBOX_CONTROLLER = 0;
+        public static final int XBOX_CONTROLLER2 = 1;
     }
 
     public static final int COLOR_PANEL_ROTATOR_MOTOR_ID = 0;
     public static final I2C.Port I2C_PORT = I2C.Port.kOnboard;
-    public static final int LOADER_MOTOR = 1;
-    public static final int INTAKER_MOTOR = 5;
+    public static final int LOADER_MOTOR = 1; //shooter left on phoenix
+    public static final int INTAKER_MOTOR = 5; 
     public static final int SHOOTER_MOTOR = 3;
+    public static final int LEFT_SHOOTER = 8;
+    public static final int RIGHT_SHOOTER = 9;
 }
