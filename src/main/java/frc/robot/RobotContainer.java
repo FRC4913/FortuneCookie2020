@@ -71,10 +71,6 @@ public class RobotContainer {
         .whileHeld(new InstantCommand(colorPanelRotator::rotateToGameColor, colorPanelRotator))
         .whenReleased(new InstantCommand(colorPanelRotator::stop, colorPanelRotator));
 
-    new JoystickButton(xboxController, Button.kA.value)
-        .whileHeld(new InstantCommand(colorPanelRotator::numOfRotation, colorPanelRotator))
-        .whenReleased(new InstantCommand(colorPanelRotator::startNum, colorPanelRotator));
-
     new JoystickButton(xboxController, Button.kBack.value).whenPressed(() -> driveSubsystem.convertToTank());
     new JoystickButton(xboxController, Button.kStart.value).whenPressed(() -> driveSubsystem.convertToArcade());
 
