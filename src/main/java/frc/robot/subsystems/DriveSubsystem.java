@@ -31,8 +31,16 @@ public class DriveSubsystem extends SubsystemBase {
     SmartDashboard.putString("mode", "arcade");
   }
 
-  public void drive(double leftY, double rightY, double rightX) {
-
+  public void drive(double leftY, double rightY, double rightX, boolean rightButton, boolean leftButton) {
+    int slowFactor = 5;
+    
+    if(rightButton){
+      rightY /= slowFactor;
+      rightX /= slowFactor;
+    }
+    if(leftButton){
+      leftY /= slowFactor;
+    }
     if (isArcade) {
       drive.arcadeDrive(-leftY, rightX);
     } else {

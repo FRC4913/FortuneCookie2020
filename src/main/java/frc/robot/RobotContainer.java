@@ -46,7 +46,8 @@ public class RobotContainer {
     driveSubsystem
         .setDefaultCommand(new RunCommand(
             () -> driveSubsystem.drive(xboxController.getY(GenericHID.Hand.kLeft),
-                xboxController.getY(GenericHID.Hand.kRight), xboxController.getX(GenericHID.Hand.kRight)),
+                xboxController.getY(GenericHID.Hand.kRight), xboxController.getX(GenericHID.Hand.kRight), 
+                xboxController.getStickButton(GenericHID.Hand.kRight), xboxController.getStickButton(GenericHID.Hand.kLeft)),
             driveSubsystem));
   }
 
