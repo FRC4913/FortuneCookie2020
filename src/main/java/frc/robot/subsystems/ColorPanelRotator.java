@@ -1,11 +1,12 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import com.revrobotics.ColorMatch;
 import com.revrobotics.ColorMatchResult;
 import com.revrobotics.ColorSensorV3;
 
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Spark;
+import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -13,7 +14,7 @@ import edu.wpi.first.wpilibj.util.Color;
 
 public class ColorPanelRotator extends SubsystemBase {
   private final ColorSensorV3 colorSensor = new ColorSensorV3(Constants.I2C_PORT);
-  private final Spark colorPanelSpark = new Spark(Constants.COLOR_PANEL_ROTATOR_MOTOR_ID);
+  private final SpeedController colorRotatorMotor = new WPI_VictorSPX(Constants.COLOR_ROTATOR_MOTOR);
 
   ColorMatch colorMatcher = new ColorMatch();
 
@@ -41,40 +42,40 @@ public class ColorPanelRotator extends SubsystemBase {
     SmartDashboard.putString("colorchar", colorChar);
     if (colorChar.length() > 0) {
       switch (DriverStation.getInstance().getGameSpecificMessage().charAt(0)) {
-      case 'B':
-      case 'b':
-        rotateToColor("Blue");
-        break;
-      case 'G':
-      case 'g':
-        // Green case code
-        rotateToColor("Green");
-        break;
-      case 'R':
-      case 'r':
-        // Red case code
-        rotateToColor("Red");
-        break;
-      case 'Y':
-      case 'y':
-        // Yellow case code
-        rotateToColor("Yellow");
-        break;
-      default:
-        // This is corrupt data
-        break;
+        case 'B':
+        case 'b':
+          rotateToColor("Blue");
+          break;
+        case 'G':
+        case 'g':
+          // Green case code
+          rotateToColor("Green");
+          break;
+        case 'R':
+        case 'r':
+          // Red case code
+          rotateToColor("Red");
+          break;
+        case 'Y':
+        case 'y':
+          // Yellow case code
+          rotateToColor("Yellow");
+          break;
+        default:
+          // This is corrupt data
+          break;
       }
     } else {
       // Code for no data received
-      colorPanelSpark.setSpeed(0);
+      colorRotatorMotor.stopMotor();
     }
   }
 
   public void rotateToColor(String targetColor) {
     if (getColor() == targetColor) {
-      colorPanelSpark.stopMotor();
-    }
-    else colorPanelSpark.setSpeed(MOTOR_SPEED);
+      colorRotatorMotor.stopMotor();
+    } else
+      colorRotatorMotor.set(MOTOR_SPEED);
   }
 
   public String getColor() {
@@ -105,11 +106,11 @@ public class ColorPanelRotator extends SubsystemBase {
 
   public void manualRotation(double leftTriggerPressure, double rightTriggerPressure) {
     if (leftTriggerPressure != 0) {
-      colorPanelSpark.setSpeed(leftTriggerPressure);
+      colorRotatorMotor.set(leftTriggerPressure);
     } else if (rightTriggerPressure != 0) {
-      colorPanelSpark.setSpeed(-rightTriggerPressure);
+      colorRotatorMotor.set(-rightTriggerPressure);
     } else {
-      colorPanelSpark.setSpeed(0);
+      colorRotatorMotor.stopMotor();
     }
   }
 
@@ -126,7 +127,7 @@ public class ColorPanelRotator extends SubsystemBase {
     if (startingColor.length() > 0) {
       if (numOfRots < NUM_ROTATIONS) {
         if (startingColor == getColor()) {
-          colorPanelSpark.setSpeed(MOTOR_SPEED);
+          colorRotatorMotor.set(MOTOR_SPEED);
           if (!isAtStartingColor) {
             numOfRots++;
             isAtStartingColor = true;
@@ -136,7 +137,7 @@ public class ColorPanelRotator extends SubsystemBase {
           isAtStartingColor = false;
         }
       } else {
-        colorPanelSpark.stopMotor();
+        colorRotatorMotor.stopMotor();
       }
     } else {
       startingColor = getColor();
@@ -156,12 +157,12 @@ public class ColorPanelRotator extends SubsystemBase {
     while (currentNumRotations < 1) {
       if (getColor() == startingColor) {
         currentNumRotations++;
-        colorPanelSpark.setSpeed(0);
+        colorRotatorMotor.stopMotor();
         moveOffCurrentColor();
-      }
-      else colorPanelSpark.setSpeed(MOTOR_SPEED);
+      } else
+        colorRotatorMotor.set(MOTOR_SPEED);
     }
-    colorPanelSpark.setSpeed(0);
+    colorRotatorMotor.stopMotor();
   }
 
   /**
@@ -173,13 +174,13 @@ public class ColorPanelRotator extends SubsystemBase {
     String currentColor;
     do {
       currentColor = getColor();
-      colorPanelSpark.setSpeed(MOTOR_SPEED);
+      colorRotatorMotor.set(MOTOR_SPEED);
     } while (currentColor == startingColor);
-    colorPanelSpark.setSpeed(0);
+    colorRotatorMotor.stopMotor();
   }
 
   public void stop() {
-    colorPanelSpark.stopMotor();
+    colorRotatorMotor.stopMotor();
   }
 
   public void periodic() {
