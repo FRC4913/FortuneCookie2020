@@ -75,7 +75,7 @@ public class RobotContainer {
 
     new JoystickButton(xboxController, Button.kBumperRight.value)
         .whileHeld(new SequentialCommandGroup(new InstantCommand(shooterSubsystem::startShooter, shooterSubsystem),
-            new WaitCommand(1), new InstantCommand(loaderSubsystem::startLoader, loaderSubsystem)))
+            new WaitCommand(3), new InstantCommand(loaderSubsystem::loaderUp, loaderSubsystem)))
         .whenReleased(new SequentialCommandGroup(new InstantCommand(shooterSubsystem::stopShooter, shooterSubsystem),
             new InstantCommand(loaderSubsystem::stopLoader, loaderSubsystem)));
 
