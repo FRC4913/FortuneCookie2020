@@ -40,4 +40,5 @@ public final class Constants {
     public static final int SHOOTER_MOTOR = 3;
     public static final int LEFT_SHOOTER = 8;
     public static final int RIGHT_SHOOTER = 9;
+    public static final int CLIMBER_MOTOR = 10; //Placeholder
 }
