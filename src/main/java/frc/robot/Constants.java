@@ -37,4 +37,5 @@ public final class Constants {
     public static final int INTAKER_MOTOR = 5;
     public static final int SHOOTER_MOTOR = 3;
     public static final int COLOR_ROTATOR_MOTOR = 10;
+    public static final int CLIMBER_MOTOR = 11;
 }
