@@ -30,6 +30,7 @@ public final class Constants {
 
     public static final class OIConstants {
         public static final int XBOX_CONTROLLER = 0;
+        public static final int XBOX_CONTROLLER2 = 1;
     }
 
     public static final I2C.Port I2C_PORT = I2C.Port.kOnboard;
