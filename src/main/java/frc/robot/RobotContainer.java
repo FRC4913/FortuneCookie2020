@@ -143,6 +143,13 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return null;
+    return new SequentialCommandGroup(
+                new InstantCommand(shooterSubsystem::startShooter, shooterSubsystem),
+                new WaitCommand(10),
+                new InstantCommand(shooterSubsystem::stopShooter, shooterSubsystem),
+                new InstantCommand(() -> driveSubsystem.drive(-0.5, 0, 0), driveSubsystem),
+                new WaitCommand(3),
+                new InstantCommand(driveSubsystem::stopDrive, driveSubsystem)
+            );
   }
 }
