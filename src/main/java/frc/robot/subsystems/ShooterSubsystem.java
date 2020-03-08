@@ -1,22 +1,22 @@
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
+
+import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 public class ShooterSubsystem extends SubsystemBase {
-    public final WPI_TalonSRX shooterTalonSRX = new WPI_TalonSRX(Constants.SHOOTER_MOTOR);
-    public final WPI_TalonSRX loaderTalonSRX = new WPI_TalonSRX(Constants.LOADER_MOTOR); 
+    private final SpeedController shooterLeftController = new WPI_VictorSPX(Constants.SHOOTER_MOTOR_LEFT);
+    private final SpeedController shooterRightController = new WPI_VictorSPX(Constants.SHOOTER_MOTOR_RIGHT);
 
     public void startShooter() {
-        shooterTalonSRX.set(1);
+        shooterLeftController.set(1);
+        shooterRightController.set(-1);
     }
-  
-    /**
-     * Releases the hatch.
-     */
+
     public void stopShooter() {
-        shooterTalonSRX.set(0);
+        shooterLeftController.stopMotor();
+        shooterRightController.stopMotor();
     }
-  }
+}

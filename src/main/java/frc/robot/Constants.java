@@ -35,7 +35,8 @@ public final class Constants {
     public static final I2C.Port I2C_PORT = I2C.Port.kOnboard;
     public static final int LOADER_MOTOR = 1;
     public static final int INTAKER_MOTOR = 5;
-    public static final int SHOOTER_MOTOR = 3;
+    public static final int SHOOTER_MOTOR_LEFT = 3;
+    public static final int SHOOTER_MOTOR_RIGHT = 12;
     public static final int COLOR_ROTATOR_MOTOR = 10;
     public static final int CLIMBER_MOTOR = 11;
 }
